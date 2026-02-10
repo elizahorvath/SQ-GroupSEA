@@ -1,1 +1,1 @@
-# SQ-GroupSEA
+# Jabberpoint
