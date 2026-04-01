@@ -49,6 +49,8 @@ public class SlideViewerComponent extends JComponent implements PresentationObse
 		this.presentation = pres;
 		this.labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
 		this.frame = frame;
+
+        pres.addObserver(this);
 	}
 
     @Override
