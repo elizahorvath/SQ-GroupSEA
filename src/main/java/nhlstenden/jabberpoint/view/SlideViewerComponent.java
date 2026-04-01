@@ -1,6 +1,7 @@
 package nhlstenden.jabberpoint.view;
 import nhlstenden.jabberpoint.model.Presentation;
 import nhlstenden.jabberpoint.model.Slide;
+import nhlstenden.jabberpoint.observer.PresentationObserver;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -21,7 +22,8 @@ import javax.swing.JFrame;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class SlideViewerComponent extends JComponent {
+public class SlideViewerComponent extends JComponent implements PresentationObserver
+{
 		
 	private Slide slide; // current slide
 	private Font labelFont = null; // font for labels
@@ -38,39 +40,53 @@ public class SlideViewerComponent extends JComponent {
 	private static final int XPOS = 1100;
 	private static final int YPOS = 20;
 
+    /**
+     * Constructor registers this component as an observer of the Presentation.
+     */
+
 	public SlideViewerComponent(Presentation pres, JFrame frame) {
 		setBackground(BGCOLOR); 
-		presentation = pres;
-		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
+		this.presentation = pres;
+		this.labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
 		this.frame = frame;
 	}
 
+    @Override
 	public Dimension getPreferredSize() {
 		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
 	}
 
-	public void update(Presentation presentation, Slide data) {
-		if (data == null) {
-			repaint();
-			return;
-		}
+    /**
+     * Observer update method.
+     * Called automatically when Presentation changes slide.
+     */
+    @Override
+	public void update(Presentation presentation) {
 		this.presentation = presentation;
-		this.slide = data;
-		repaint();
+		this.slide = presentation.getCurrentSlide();
+
+		repaint(); //Redraw the slide
 		frame.setTitle(presentation.getTitle());
 	}
 
-	// Draw the slide and the page indicator
+	/**
+     * Draw the slide and the page indicator
+     * */
+    @Override
 	public void paintComponent(Graphics g) {
 		g.setColor(BGCOLOR);
 		g.fillRect(0, 0, getSize().width, getSize().height);
-		if (presentation.getSlideNumber() < 0 || slide == null) {
+
+		if (presentation.getSlideNumber() < 0 || slide == null)
+        {
 			return;
 		}
+
 		g.setFont(labelFont);
 		g.setColor(COLOR);
 		g.drawString("Slide " + (1 + presentation.getSlideNumber()) + " of " +
                  presentation.getSize(), XPOS, YPOS);
+
 		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
 		slide.draw(g, area, this);
 	}
