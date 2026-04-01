@@ -15,7 +15,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 
-/** XMLAccessor, reads and writes XML files
+/** XMLAccessor, reads and writes XML files.
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
  * @version 1.1 2002/12/17 Gert Florijn
  * @version 1.2 2003/11/19 Sylvia Stuurman
@@ -30,7 +30,7 @@ public class XMLAccessor extends Accessor {
     /** Default API to use. */
     protected static final String DEFAULT_API_TO_USE = "dom";
     
-    /** namen van xml tags of attributen */
+    /** Names of XML tags or attributes */
     protected static final String SHOWTITLE = "showtitle";
     protected static final String SLIDETITLE = "title";
     protected static final String SLIDE = "slide";
@@ -40,7 +40,7 @@ public class XMLAccessor extends Accessor {
     protected static final String TEXT = "text";
     protected static final String IMAGE = "image";
     
-    /** tekst van messages */
+    /** Message text constants */
     protected static final String PCE = "Parser Configuration Exception";
     protected static final String UNKNOWNTYPE = "Unknown Element type";
     protected static final String NFE = "Number Format Exception";
