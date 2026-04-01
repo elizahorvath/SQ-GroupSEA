@@ -93,7 +93,7 @@ public class Presentation {
 	}
 
 	/** Reset the presentation */
-	void clear() {
+	public void clear() {
 		showList = new ArrayList<Slide>();
 		setSlideNumber(-1);
 	}
