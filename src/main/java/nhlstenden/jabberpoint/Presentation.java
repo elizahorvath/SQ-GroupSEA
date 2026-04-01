@@ -1,3 +1,4 @@
+package nhlstenden.jabberpoint;
 import java.util.ArrayList;
 
 

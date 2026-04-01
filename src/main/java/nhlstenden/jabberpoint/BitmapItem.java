@@ -1,10 +1,10 @@
+package nhlstenden.jabberpoint;
 import java.awt.Rectangle;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 
 /** <p>The class for a Bitmap item</p>
@@ -19,7 +19,7 @@ import java.io.IOException;
 */
 
 public class BitmapItem extends SlideItem {
-  private BufferedImage bufferedImage;
+  private Image bufferedImage;
   private String imageName;
   
   protected static final String FILE = "File ";
@@ -29,25 +29,27 @@ public class BitmapItem extends SlideItem {
 	public BitmapItem(int level, String name) {
 		super(level);
 		imageName = name;
-		try {
-			bufferedImage = ImageIO.read(new File(imageName));
+		// Check if file exists manually since Toolkit doesn't throw IOException
+		File file = new File(name);
+		if (!file.exists()) {
+			System.err.println(FILE + imageName + NOTFOUND);
 		}
-		catch (IOException e) {
-			System.err.println(FILE + imageName + NOTFOUND) ;
-		}
+		
+		// Toolkit loads the image in the background (enabling GIFs)
+		this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
 	}
 
-// An empty bitmap-item
+	// An empty bitmap-item
 	public BitmapItem() {
 		this(0, null);
 	}
 
-// Returns the filename of the image
+	// Returns the filename of the image
 	public String getName() {
 		return imageName;
 	}
 
-// Returns the bounding box of the image
+	// Returns the bounding box of the image
 	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
 		// Changed myStyle.indent to myStyle.getIndent()
         // Changed myStyle.leading to myStyle.getLeading()
@@ -57,7 +59,7 @@ public class BitmapItem extends SlideItem {
                 (int) (bufferedImage.getHeight(observer) * scale));
 	}
 
-// Draws the image
+	// Draws the image
 	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer) {
 		// Changed myStyle.indent to myStyle.getIndent()
         // Changed myStyle.leading to myStyle.getLeading()
