@@ -20,23 +20,25 @@ import javax.swing.JFrame;
  * @version 1.6 2014/05/16 Sylvia Stuurman
 */
 
-public class SlideViewerFrame extends JFrame {
+public class SlideViewerFrame extends JFrame
+{
 	private static final long serialVersionUID = 3227L;
 	
 	public final static int WIDTH = Resources.WIDTH;
 	public final static int HEIGHT = Resources.HEIGHT;
 	private static final String JABTITLE = Resources.JABTITLE;
 	
-	public SlideViewerFrame(String title, Presentation presentation) {
+	public SlideViewerFrame(String title, Presentation presentation)
+    {
 		super(title);
 		SlideViewerComponent slideViewerComponent = new SlideViewerComponent(presentation, this);
-		presentation.setShowView(slideViewerComponent);
+
 		setupWindow(slideViewerComponent, presentation);
 	}
 
 	// Setup the GUI window
-	public void setupWindow(SlideViewerComponent 
-			slideViewerComponent, Presentation presentation) {
+	public void setupWindow(SlideViewerComponent slideViewerComponent, Presentation presentation)
+    {
 		setTitle(JABTITLE);
 		addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
@@ -44,9 +46,9 @@ public class SlideViewerFrame extends JFrame {
 				}
 			});
 		getContentPane().add(slideViewerComponent);
-		addKeyListener(new KeyController(presentation)); // add key controller
+		addKeyListener(new KeyController(presentation));            // add key controller
 		setMenuBar(new MenuController(this, presentation));	// add menu controller
-		setSize(new Dimension(WIDTH, HEIGHT)); // Same dimensions as Slide
+		setSize(new Dimension(WIDTH, HEIGHT));                      // Same dimensions as Slide
 		setVisible(true);
 	}
 }
