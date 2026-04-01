@@ -1,15 +1,13 @@
+package nhlstenden.jabberpoint;
 import java.awt.Rectangle;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 
-import javax.imageio.ImageIO;
 
-import java.io.IOException;
-
-
-/** <p>De klasse voor een Bitmap item</p>
+/** <p>The class for a Bitmap item</p>
  * <p>Bitmap items have the responsibility to draw themselves.</p>
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
  * @version 1.1 2002/12/17 Gert Florijn
@@ -21,7 +19,7 @@ import java.io.IOException;
 */
 
 public class BitmapItem extends SlideItem {
-  private BufferedImage bufferedImage;
+  private Image bufferedImage;
   private String imageName;
   
   protected static final String FILE = "File ";
@@ -31,39 +29,45 @@ public class BitmapItem extends SlideItem {
 	public BitmapItem(int level, String name) {
 		super(level);
 		imageName = name;
-		try {
-			bufferedImage = ImageIO.read(new File(imageName));
+		// Check if file exists manually since Toolkit doesn't throw IOException
+		File file = new File(name);
+		if (!file.exists()) {
+			System.err.println(FILE + imageName + NOTFOUND);
 		}
-		catch (IOException e) {
-			System.err.println(FILE + imageName + NOTFOUND) ;
-		}
+		
+		// Toolkit loads the image in the background (enabling GIFs)
+		this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
 	}
 
-// An empty bitmap-item
+	// An empty bitmap-item
 	public BitmapItem() {
 		this(0, null);
 	}
 
-// give the filename of the image
+	// Returns the filename of the image
 	public String getName() {
 		return imageName;
 	}
 
-// give the  bounding box of the image
+	// Returns the bounding box of the image
 	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
-		return new Rectangle((int) (myStyle.indent * scale), 0,
-				(int) (bufferedImage.getWidth(observer) * scale),
-				((int) (myStyle.leading * scale)) + 
-				(int) (bufferedImage.getHeight(observer) * scale));
+		// Changed myStyle.indent to myStyle.getIndent()
+        // Changed myStyle.leading to myStyle.getLeading()
+		return new Rectangle((int) (myStyle.getIndent() * scale), 0,
+                (int) (bufferedImage.getWidth(observer) * scale),
+                ((int) (myStyle.getLeading() * scale)) + 
+                (int) (bufferedImage.getHeight(observer) * scale));
 	}
 
-// draw the image
+	// Draws the image
 	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer) {
-		int width = x + (int) (myStyle.indent * scale);
-		int height = y + (int) (myStyle.leading * scale);
-		g.drawImage(bufferedImage, width, height,(int) (bufferedImage.getWidth(observer)*scale),
+		// Changed myStyle.indent to myStyle.getIndent()
+        // Changed myStyle.leading to myStyle.getLeading()
+        int width = x + (int) (myStyle.getIndent() * scale);
+        int height = y + (int) (myStyle.getLeading() * scale);
+        g.drawImage(bufferedImage, width, height,(int) (bufferedImage.getWidth(observer)*scale),
                 (int) (bufferedImage.getHeight(observer)*scale), observer);
-	}
+    }
 
 	public String toString() {
 		return "BitmapItem[" + getLevel() + "," + imageName + "]";

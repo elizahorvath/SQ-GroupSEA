@@ -1,3 +1,4 @@
+package nhlstenden.jabberpoint;
 import java.util.ArrayList;
 
 
@@ -45,12 +46,12 @@ public class Presentation {
 		this.slideViewComponent = slideViewerComponent;
 	}
 
-	// give the number of the current slide
+	// Returns the number of the current slide
 	public int getSlideNumber() {
 		return currentSlideNumber;
 	}
 
-	// change the current slide number and signal it to the window
+	// Change the current slide number and notify the window/view component
 	public void setSlideNumber(int number) {
 		currentSlideNumber = number;
 		if (slideViewComponent != null) {
@@ -58,21 +59,21 @@ public class Presentation {
 		}
 	}
 
-	// go to the previous slide unless your at the beginning of the presentation
+	// Go to the previous slide unless at the beginning of the presentation
 	public void prevSlide() {
 		if (currentSlideNumber > 0) {
 			setSlideNumber(currentSlideNumber - 1);
 	    }
 	}
 
-	// go to the next slide unless your at the end of the presentation.
+	// Go to the next slide unless at the end of the presentationon.
 	public void nextSlide() {
 		if (currentSlideNumber < (showList.size()-1)) {
 			setSlideNumber(currentSlideNumber + 1);
 		}
 	}
 
-	// Delete the presentation to be ready for the next one.
+	// Reset the presentation to be ready for the next one.
 	void clear() {
 		showList = new ArrayList<Slide>();
 		setSlideNumber(-1);
@@ -91,7 +92,7 @@ public class Presentation {
 			return (Slide)showList.get(number);
 	}
 
-	// Give the current slide
+	// Returns the current slide
 	public Slide getCurrentSlide() {
 		return getSlide(currentSlideNumber);
 	}

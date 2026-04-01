@@ -1,10 +1,12 @@
+package nhlstenden.jabberpoint;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
 
-/** <p>Style is for Indent, Color, Font and Leading.</p>
- * <p>Direct relation between style-number and item-level:
- * in Slide style if fetched for an item
- * with style-number as item-level.</p>
+/** <p>Style handles Indent, Color, Font, and Leading.</p>
+ * <p>There is a direct relation between style-number and item-level:
+ * in Slide, the style is fetched for an item using the style-number as the item-level.</p>
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
  * @version 1.1 2002/12/17 Gert Florijn
  * @version 1.2 2003/11/19 Sylvia Stuurman
@@ -15,44 +17,100 @@ import java.awt.Font;
  */
 
 public class Style {
-	private static Style[] styles; // de styles
+	private static Style instance; // the single instance of Style (Singleton)
 	
-	private static final String FONTNAME = "Helvetica";
-	int indent;
-	Color color;
-	Font font;
-	int fontSize;
-	int leading;
+	// Indents per level
+    private static final int INDENT_0 = 0;
+    private static final int INDENT_1 = 20;
+    private static final int INDENT_2 = 50;
+    private static final int INDENT_3 = 70;
+    private static final int INDENT_4 = 90;
 
-	public static void createStyles() {
-		styles = new Style[5];    
-		// The styles are fixed.
-		styles[0] = new Style(0, Color.red,   48, 20);	// style for item-level 0
-		styles[1] = new Style(20, Color.blue,  40, 10);	// style for item-level 1
-		styles[2] = new Style(50, Color.black, 36, 10);	// style for item-level 2
-		styles[3] = new Style(70, Color.black, 30, 10);	// style for item-level 3
-		styles[4] = new Style(90, Color.black, 24, 10);	// style for item-level 4
-	}
+    // Font sizes per level
+    private static final int FONT_SIZE_0 = 48;
+    private static final int FONT_SIZE_1 = 40;
+    private static final int FONT_SIZE_2 = 36;
+    private static final int FONT_SIZE_3 = 30;
+    private static final int FONT_SIZE_4 = 24;
 
-	public static Style getStyle(int level) {
-		if (level >= styles.length) {
-			level = styles.length - 1;
-		}
-		return styles[level];
-	}
+    // Leading / Spacing constants
+    private static final int LEADING_TITLE = 20;
+    private static final int LEADING_DEFAULT = 10;
 
-	public Style(int indent, Color color, int points, int leading) {
-		this.indent = indent;
-		this.color = color;
-		font = new Font(FONTNAME, Font.BOLD, fontSize=points);
-		this.leading = leading;
-	}
 
-	public String toString() {
-		return "["+ indent + "," + color + "; " + fontSize + " on " + leading +"]";
-	}
+	// Map to store styles per level
+	private final Map<Integer, Style> levelStyles = new HashMap<>();
+	
+	// Instance variables
+    private final Font font;
+    private final Color color;
+    private final int indent;
+    private final int fontSize;
+    private final int leading;
 
-	public Font getFont(float scale) {
-		return font.deriveFont(fontSize * scale);
-	}
+	private static final String FONT_NAME = "Helvetica";
+
+	/* Singleton Access Point */
+	public static Style getInstance() {
+        if (instance == null) {
+            instance = new Style();
+        }
+        return instance;
+    }
+
+	/* Private constructor for the Singleton Registry.
+     * Initializes all the standard styles (removes Magic Numbers).*/
+	private Style() {
+        // Default values for the registry "container"
+        this.indent = 0;
+        this.color = Color.black;
+        this.fontSize = 0;
+        this.leading = 0;
+        this.font = null;
+
+        // Initialize the various levels
+        levelStyles.put(0, new Style(INDENT_0, Color.red,   FONT_SIZE_0, LEADING_TITLE));
+        levelStyles.put(1, new Style(INDENT_1, Color.blue,  FONT_SIZE_1, LEADING_DEFAULT));
+        levelStyles.put(2, new Style(INDENT_2, Color.black, FONT_SIZE_2, LEADING_DEFAULT));
+        levelStyles.put(3, new Style(INDENT_3, Color.black, FONT_SIZE_3, LEADING_DEFAULT));
+        levelStyles.put(4, new Style(INDENT_4, Color.black, FONT_SIZE_4, LEADING_DEFAULT));
+    }
+
+	/* Private constructor for creating individual level instances. */
+	private Style(int indent, Color color, int points, int leading) {
+        this.indent = indent;
+        this.color = color;
+        this.fontSize = points;
+        this.font = new Font(FONT_NAME, Font.BOLD, points);
+        this.leading = leading;
+    }
+
+	public Style getStyle(int level) {
+        if (level >= levelStyles.size()) {
+            level = levelStyles.size() - 1;
+        }
+        return levelStyles.get(level);
+    }
+
+	// Getters
+    public Color getColor() {
+        return color;
+    }
+
+    public int getIndent() {
+        return indent;
+    }
+
+    public int getLeading() {
+        return leading;
+    }
+
+    public Font getFont(float scale) {
+        return font.deriveFont(fontSize * scale);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + indent + "," + color + "; " + fontSize + " on " + leading + "]";
+    }
 }

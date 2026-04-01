@@ -1,3 +1,4 @@
+package nhlstenden.jabberpoint;
 import java.awt.MenuBar;
 import java.awt.Frame;
 import java.awt.Menu;
@@ -121,7 +122,7 @@ public class MenuController extends MenuBar {
 				AboutBox.show(parent);
 			}
 		});
-		setHelpMenu(helpMenu);		// needed for portability (Motif, etc.).
+		setHelpMenu(helpMenu); // needed for portability (Motif, etc.).
 	}
 
 // create a menu item
