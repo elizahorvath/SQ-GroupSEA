@@ -122,7 +122,7 @@ public class MenuController extends MenuBar {
 				AboutBox.show(parent);
 			}
 		});
-		setHelpMenu(helpMenu);		// needed for portability (Motif, etc.).
+		setHelpMenu(helpMenu); // needed for portability (Motif, etc.).
 	}
 
 // create a menu item

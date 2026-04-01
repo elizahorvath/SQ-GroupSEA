@@ -15,8 +15,8 @@ import java.util.Vector;
  */
 
 public class Slide {
-	public final static int WIDTH = 1200;
-	public final static int HEIGHT = 800;
+	public final static int WIDTH = Resources.WIDTH;
+	public final static int HEIGHT = Resources.HEIGHT;
 	protected String title; // title is saved separately
 	protected Vector<SlideItem> items; // slide items are saved in a Vector
 
@@ -29,54 +29,61 @@ public class Slide {
 		items.addElement(anItem);
 	}
 
-	// give the title of the slide
+	// Returns the title of the slide
 	public String getTitle() {
 		return title;
 	}
 
-	// change the title of the slide
+	// Change the title of the slide
 	public void setTitle(String newTitle) {
 		title = newTitle;
 	}
 
-	// Create TextItem of String, and add the TextItem 
+	// Create TextItem from String and add it to the slide
 	public void append(int level, String message) {
 		append(new TextItem(level, message));
 	}
 
-	// give the  SlideItem
+	// Returns the SlideItem at a specific index
 	public SlideItem getSlideItem(int number) {
 		return (SlideItem)items.elementAt(number);
 	}
 
-	// give all SlideItems in a Vector
+	// Returns all SlideItems in a Vector
 	public Vector<SlideItem> getSlideItems() {
 		return items;
 	}
 
-	// give the size of the Slide
+	// Returns the number of items on the Slide
 	public int getSize() {
 		return items.size();
 	}
 
-	// draw the slide
+	// Draw the slide
 	public void draw(Graphics g, Rectangle area, ImageObserver view) {
-		float scale = getScale(area);
-	    int y = area.y;
-	// Title is handled separately
+        float scale = getScale(area);
+        int y = area.y;
+
+		// Title is handled separately
 	    SlideItem slideItem = new TextItem(0, getTitle());
-	    Style style = Style.getStyle(slideItem.getLevel());
+	    
+		// Fix: Call through the Singleton instance
+        Style style = Style.getInstance().getStyle(slideItem.getLevel());
+
 	    slideItem.draw(area.x, y, scale, g, style, view);
 	    y += slideItem.getBoundingBox(g, view, scale, style).height;
 	    for (int number=0; number<getSize(); number++) {
-	      slideItem = (SlideItem)getSlideItems().elementAt(number);
-	      style = Style.getStyle(slideItem.getLevel());
-	      slideItem.draw(area.x, y, scale, g, style, view);
-	      y += slideItem.getBoundingBox(g, view, scale, style).height;
-	    }
-	  }
+            slideItem = (SlideItem)getSlideItems().elementAt(number);
+            
+            // Fix: Call through the Singleton instance
+            style = Style.getInstance().getStyle(slideItem.getLevel());
+            
+            slideItem.draw(area.x, y, scale, g, style, view);
+            y += slideItem.getBoundingBox(g, view, scale, style).height;
+        }
+    }
 
-	// Give the scale for drawing
+	// Calculate the scale for drawing based on the area size
 	private float getScale(Rectangle area) {
 		return Math.min(((float)area.width) / ((float)WIDTH), ((float)area.height) / ((float)HEIGHT));
 	}
