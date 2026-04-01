@@ -15,6 +15,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import nhlstenden.jabberpoint.factory.SlideItemFactory;
+import nhlstenden.jabberpoint.factory.XMLSlideItemFactory;
+
 
 /** XMLAccessor, reads and writes XML files.
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
@@ -30,6 +33,8 @@ public class XMLAccessor extends Accessor {
 	
     /** Default API to use. */
     protected static final String DEFAULT_API_TO_USE = "dom";
+
+	private SlideItemFactory factory;
     
     /** Names of XML tags or attributes */
     protected static final String SHOWTITLE = "showtitle";
@@ -45,7 +50,10 @@ public class XMLAccessor extends Accessor {
     protected static final String PCE = "Parser Configuration Exception";
     protected static final String UNKNOWNTYPE = "Unknown Element type";
     protected static final String NFE = "Number Format Exception";
-    
+
+	public XMLAccessor() {
+		this.factory = new XMLSlideItemFactory();
+	}
     
     private String getTitle(Element element, String tagName) {
     	NodeList titles = element.getElementsByTagName(tagName);
@@ -101,16 +109,13 @@ public class XMLAccessor extends Accessor {
 			}
 		}
 		String type = attributes.getNamedItem(KIND).getTextContent();
-		if (TEXT.equals(type)) {
-			slide.append(new TextItem(level, item.getTextContent()));
-		}
-		else {
-			if (IMAGE.equals(type)) {
-				slide.append(new BitmapItem(level, item.getTextContent()));
-			}
-			else {
-				System.err.println(UNKNOWNTYPE);
-			}
+		String content = item.getTextContent();
+
+		try {
+			SlideItem slideItem = factory.createSlideItem(type, level, content);
+			slide.append(slideItem);
+		} catch (IllegalArgumentException e) {
+			System.err.println(UNKNOWNTYPE);
 		}
 	}
 
