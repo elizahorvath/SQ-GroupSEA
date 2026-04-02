@@ -1,4 +1,10 @@
 package nhlstenden.jabberpoint;
+import nhlstenden.jabberpoint.model.Presentation;
+import nhlstenden.jabberpoint.persistance.Accessor;
+import nhlstenden.jabberpoint.persistance.XMLAccessor;
+import nhlstenden.jabberpoint.util.Resources;
+import nhlstenden.jabberpoint.view.SlideViewerFrame;
+
 import javax.swing.JOptionPane;
 
 import java.io.IOException;
