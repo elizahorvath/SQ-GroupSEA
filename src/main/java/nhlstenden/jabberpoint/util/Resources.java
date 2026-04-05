@@ -1,7 +1,8 @@
 package nhlstenden.jabberpoint.util;
 
 /* Global configurations and constants for JabberPoint.*/
-public class Resources {
+public class Resources
+{
     // Application Dimensions
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 800;

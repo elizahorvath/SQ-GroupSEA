@@ -4,19 +4,18 @@ import nhlstenden.jabberpoint.model.BitmapItem;
 import nhlstenden.jabberpoint.model.Presentation;
 import nhlstenden.jabberpoint.model.Slide;
 
-/** A built in demo-presentation
+/**
+ * A built in demo-presentation
+ *
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.1 2002/12/17 Gert Florijn
- * @version 1.2 2003/11/19 Sylvia Stuurman
- * @version 1.3 2004/08/17 Sylvia Stuurman
- * @version 1.4 2007/07/16 Sylvia Stuurman
- * @version 1.5 2010/03/03 Sylvia Stuurman
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-class DemoPresentation extends Accessor {
+class DemoPresentation extends Accessor
+{
 
-	public void loadFile(Presentation presentation, String unusedFilename) {
+    public void loadFile(Presentation presentation, String unusedFilename)
+    {
         presentation.setTitle("Demo Presentation");
         Slide slide;
         slide = new Slide();
@@ -33,7 +32,7 @@ class DemoPresentation extends Accessor {
         slide.append(3, "Quit: q or Q");
         presentation.append(slide);
 
-		slide = new Slide();
+        slide = new Slide();
         slide.setTitle("Demonstration of levels and styles");
         slide.append(1, "Level 1");
         slide.append(2, "Level 2");
@@ -54,7 +53,8 @@ class DemoPresentation extends Accessor {
         presentation.append(slide);
     }
 
-	public void saveFile(Presentation presentation, String unusedFilename) {
-		throw new IllegalStateException("Save As->Demo! called");
-	}
+    public void saveFile(Presentation presentation, String unusedFilename)
+    {
+        throw new IllegalStateException("Save As->Demo! called");
+    }
 }
