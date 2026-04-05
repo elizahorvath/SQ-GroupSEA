@@ -1,7 +1,5 @@
 package nhlstenden.jabberpoint.model;
 import nhlstenden.jabberpoint.observer.PresentationObserver;
-import nhlstenden.jabberpoint.view.SlideViewerComponent;
-
 import java.util.ArrayList;
 
 
