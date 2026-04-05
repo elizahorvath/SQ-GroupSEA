@@ -115,19 +115,24 @@ public class XMLAccessor extends Accessor
             }
         }
         String type = attributes.getNamedItem(KIND).getTextContent();
+        
+        slide.append(createSlideItem(type, level, item.getTextContent()));
+
+    }
+
+    protected SlideItem createSlideItem(String type, int level, String content)
+    {
         if (TEXT.equals(type))
         {
-            slide.append(new TextItem(level, item.getTextContent()));
-        } else
-        {
-            if (IMAGE.equals(type))
-            {
-                slide.append(new BitmapItem(level, item.getTextContent()));
-            } else
-            {
-                System.err.println(UNKNOWNTYPE);
-            }
+            return new TextItem(level, content);
         }
+        if (IMAGE.equals(type))
+        {
+            return new BitmapItem(level, content);
+        }
+
+        System.err.println(UNKNOWNTYPE);
+        return new TextItem(level, content); // safe fallback
     }
 
     public void saveFile(Presentation presentation, String filename) throws IOException
