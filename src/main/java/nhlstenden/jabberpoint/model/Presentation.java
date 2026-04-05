@@ -150,9 +150,4 @@ public class Presentation
     {
         return getSlide(currentSlideNumber);
     }
-
-    /**
-     * Exit the program
-     */
-
 }
