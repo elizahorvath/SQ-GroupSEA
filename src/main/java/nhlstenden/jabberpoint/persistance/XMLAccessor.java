@@ -10,32 +10,24 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import nhlstenden.jabberpoint.model.*;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+// Keep your Factory imports
+import nhlstenden.jabberpoint.factory.SlideItemFactory;
+import nhlstenden.jabberpoint.factory.XMLSlideItemFactory;
+import nhlstenden.jabberpoint.model.*; // Import models for Slide, SlideItem, etc.
 
-/**
- * XMLAccessor, reads and writes XML files.
- *
- * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.6 2014/05/16 Sylvia Stuurman
- */
-
-public class XMLAccessor extends Accessor
-{
-
-    /**
-     * Default API to use.
-     */
+/** XMLAccessor, reads and writes XML files. */
+public class XMLAccessor extends Accessor {
+    
     protected static final String DEFAULT_API_TO_USE = "dom";
-
-    /**
-     * Names of XML tags or attributes
-     */
+    private SlideItemFactory factory; // Keep your Factory field
+    
+    /** Names of XML tags or attributes */
     protected static final String SHOWTITLE = "showtitle";
     protected static final String SLIDETITLE = "title";
     protected static final String SLIDE = "slide";
@@ -52,21 +44,20 @@ public class XMLAccessor extends Accessor
     protected static final String UNKNOWNTYPE = "Unknown Element type";
     protected static final String NFE = "Number Format Exception";
 
-
-    private String getTitle(Element element, String tagName)
-    {
+public XMLAccessor() {
+        this.factory = new XMLSlideItemFactory(); 
+    }
+    
+    private String getTitle(Element element, String tagName) {
         NodeList titles = element.getElementsByTagName(tagName);
         return titles.item(0).getTextContent();
-
     }
 
-    public void loadFile(Presentation presentation, String filename) throws IOException
-    {
+    public void loadFile(Presentation presentation, String filename) throws IOException {
         int slideNumber, itemNumber, max = 0, maxItems = 0;
-        try
-        {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = builder.parse(new File(filename)); // Create a JDOM document
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();    
+            Document document = builder.parse(new File(filename));
             Element doc = document.getDocumentElement();
             presentation.setTitle(getTitle(doc, SHOWTITLE));
 
@@ -99,40 +90,32 @@ public class XMLAccessor extends Accessor
         }
     }
 
-    protected void loadSlideItem(Slide slide, Element item)
-    {
+    protected void loadSlideItem(Slide slide, Element item) {
         int level = 1; // default
         NamedNodeMap attributes = item.getAttributes();
-        String leveltext = attributes.getNamedItem(LEVEL).getTextContent();
-        if (leveltext != null)
-        {
-            try
-            {
-                level = Integer.parseInt(leveltext);
-            } catch (NumberFormatException x)
-            {
+        
+        // Safely extract the level
+        var levelNode = attributes.getNamedItem(LEVEL);
+        if (levelNode != null) {
+            try {
+                level = Integer.parseInt(levelNode.getTextContent());
+            } catch (NumberFormatException x) {
                 System.err.println(NFE);
             }
         }
+
+        // Get the type (text/image) and the content
         String type = attributes.getNamedItem(KIND).getTextContent();
-        
-        slide.append(createSlideItem(type, level, item.getTextContent()));
+        String content = item.getTextContent();
 
-    }
-
-    protected SlideItem createSlideItem(String type, int level, String content)
-    {
-        if (TEXT.equals(type))
-        {
-            return new TextItem(level, content);
+        // FIX: Use the Factory instead of if-else blocks
+        try {
+            SlideItem slideItem = factory.createSlideItem(type, level, content);
+            slide.append(slideItem);
+        } catch (IllegalArgumentException e) {
+            // This catches "Unknown Element type" thrown by your Factory's default switch case
+            System.err.println(UNKNOWNTYPE + ": " + type);
         }
-        if (IMAGE.equals(type))
-        {
-            return new BitmapItem(level, content);
-        }
-
-        System.err.println(UNKNOWNTYPE);
-        return new TextItem(level, content); // safe fallback
     }
 
     public void saveFile(Presentation presentation, String filename) throws IOException

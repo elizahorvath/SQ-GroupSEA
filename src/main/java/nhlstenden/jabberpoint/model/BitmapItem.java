@@ -21,44 +21,47 @@ public class BitmapItem extends SlideItem
     private Image bufferedImage;
     private String imageName;
 
-    protected static final String FILE = "File ";
-    protected static final String NOTFOUND = " not found";
+public class BitmapItem extends SlideItem 
+{
+  private Image bufferedImage;
+  private String imageName;
+  
+  protected static final String FILE = "File ";
+  protected static final String NOTFOUND = " not found";
 
-    // level is equal to item-level; name is the name of the file with the Image
-    public BitmapItem(int level, String name)
-    {
-        super(level);
-        imageName = name;
-        // Check if file exists manually since Toolkit doesn't throw IOException
-        if (name != null)
-        {
-            File file = new File(name);
-            if (!file.exists())
-            {
-                System.err.println(FILE + imageName + NOTFOUND);
-            }
-
-            // Toolkit loads the image in the background (enabling GIFs)
+// level is equal to item-level; name is the name of the file with the Image
+	public BitmapItem(int level, String name) 
+	{
+		super(level);
+		imageName = name;
+		if (name != null) 
+			{
+        File file = new File(name);
+        if (!file.exists()) 
+			{
+            System.err.println(FILE + imageName + NOTFOUND);
         }
+        // Only load if name is not null
         this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
     }
+}
+	
+	// An empty bitmap-item
+	public BitmapItem() 
+	{
+		this(0, null);
+	}
 
-    // An empty bitmap-item
-    public BitmapItem()
-    {
-        this(0, null);
-    }
+	// Returns the filename of the image
+	public String getName() 
+	{
+		return imageName;
+	}
 
-    // Returns the filename of the image
-    public String getName()
-    {
-        return imageName;
-    }
-
-    // Returns the bounding box of the image
-    public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle)
-    {
-        // Changed myStyle.indent to myStyle.getIndent()
+	// Returns the bounding box of the image
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) 
+	{
+		// Changed myStyle.indent to myStyle.getIndent()
         // Changed myStyle.leading to myStyle.getLeading()
         return new Rectangle((int) (myStyle.getIndent() * scale), 0, (int) (bufferedImage.getWidth(observer) * scale), ((int) (myStyle.getLeading() * scale)) + (int) (bufferedImage.getHeight(observer) * scale));
     }
