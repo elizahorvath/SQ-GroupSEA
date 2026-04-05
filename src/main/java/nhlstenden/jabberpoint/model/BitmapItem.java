@@ -30,15 +30,17 @@ public class BitmapItem extends SlideItem {
 		super(level);
 		imageName = name;
 		// Check if file exists manually since Toolkit doesn't throw IOException
-		File file = new File(name);
-		if (!file.exists()) {
-			System.err.println(FILE + imageName + NOTFOUND);
-		}
+		if (name != null) {
+        File file = new File(name);
+        if (!file.exists()) {
+            System.err.println(FILE + imageName + NOTFOUND);
+        }
 		
 		// Toolkit loads the image in the background (enabling GIFs)
-		this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
-	}
-
+		}
+        this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
+    }
+	
 	// An empty bitmap-item
 	public BitmapItem() {
 		this(0, null);
