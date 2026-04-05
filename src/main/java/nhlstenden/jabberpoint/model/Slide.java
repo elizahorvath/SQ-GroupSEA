@@ -71,6 +71,11 @@ public class Slide
     // Draw the slide
     public void draw(Graphics g, Rectangle area, ImageObserver view)
     {
+        drawSlideContent(g, area, view);
+    }
+
+    public void drawSlideContent(Graphics g, Rectangle area, ImageObserver view)
+    {
         float scale = getScale(area);
         int y = area.y;
 
