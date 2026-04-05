@@ -1,4 +1,4 @@
-package nhlstenden.jabberpoint;
+package nhlstenden.jabberpoint.singleton;
 import nhlstenden.jabberpoint.model.Style;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;

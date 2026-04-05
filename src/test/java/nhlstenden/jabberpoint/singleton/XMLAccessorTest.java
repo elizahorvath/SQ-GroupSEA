@@ -1,4 +1,4 @@
-package nhlstenden.jabberpoint;
+package nhlstenden.jabberpoint.singleton;
 import nhlstenden.jabberpoint.persistance.XMLAccessor;
 import nhlstenden.jabberpoint.model.Presentation;
 import org.junit.jupiter.api.Test;
