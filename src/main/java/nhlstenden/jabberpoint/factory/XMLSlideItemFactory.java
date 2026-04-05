@@ -1,6 +1,8 @@
 package nhlstenden.jabberpoint.factory;
 
-import nhlstenden.jabberpoint.*;
+import nhlstenden.jabberpoint.model.SlideItem;
+import nhlstenden.jabberpoint.model.TextItem;
+import nhlstenden.jabberpoint.model.BitmapItem;
 
 public class XMLSlideItemFactory implements SlideItemFactory {
 

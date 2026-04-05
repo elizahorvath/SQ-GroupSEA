@@ -3,9 +3,9 @@ package nhlstenden.jabberpoint.factory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import nhlstenden.jabberpoint.SlideItem;
-import nhlstenden.jabberpoint.TextItem;
-import nhlstenden.jabberpoint.BitmapItem;
+import nhlstenden.jabberpoint.model.SlideItem;
+import nhlstenden.jabberpoint.model.TextItem;
+import nhlstenden.jabberpoint.model.BitmapItem;
 
 public class SlideItemFactoryTest {
 
