@@ -103,7 +103,7 @@ public class MenuController extends MenuBar
         {
             public void actionPerformed(ActionEvent actionEvent)
             {
-                presentation.exit(0);
+                System.exit(0);
             }
         });
         add(fileMenu);

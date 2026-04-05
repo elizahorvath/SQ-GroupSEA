@@ -154,8 +154,5 @@ public class Presentation
     /**
      * Exit the program
      */
-    public void exit(int n)
-    {
-        System.exit(n);
-    }
+
 }
