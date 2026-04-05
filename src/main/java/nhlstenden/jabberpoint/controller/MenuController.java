@@ -50,6 +50,10 @@ public class MenuController extends MenuBar
     protected static final String LOADERR = "Load Error";
     protected static final String SAVEERR = "Save Error";
 
+    protected Accessor createAccessor() {
+        return new XMLAccessor();
+    }
+
     public MenuController(Frame frame, Presentation pres)
     {
         parent = frame;
@@ -63,7 +67,7 @@ public class MenuController extends MenuBar
             public void actionPerformed(ActionEvent actionEvent)
             {
                 presentation.clear();
-                Accessor xmlAccessor = new XMLAccessor();
+                Accessor xmlAccessor = createAccessor();
                 try
                 {
                     xmlAccessor.loadFile(presentation, TESTFILE);
@@ -87,7 +91,7 @@ public class MenuController extends MenuBar
         {
             public void actionPerformed(ActionEvent e)
             {
-                Accessor xmlAccessor = new XMLAccessor();
+                Accessor xmlAccessor = createAccessor();
                 try
                 {
                     xmlAccessor.saveFile(presentation, SAVEFILE);
@@ -103,7 +107,7 @@ public class MenuController extends MenuBar
         {
             public void actionPerformed(ActionEvent actionEvent)
             {
-                presentation.exit(0);
+                System.exit(0);
             }
         });
         add(fileMenu);

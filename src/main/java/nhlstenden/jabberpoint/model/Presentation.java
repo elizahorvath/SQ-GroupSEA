@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class Presentation
+public class Presentation implements SlideNavigator
 {
 
     private String showTitle;                   // title of the presentation
@@ -149,13 +149,5 @@ public class Presentation
     public Slide getCurrentSlide()
     {
         return getSlide(currentSlideNumber);
-    }
-
-    /**
-     * Exit the program
-     */
-    public void exit(int n)
-    {
-        System.exit(n);
     }
 }
