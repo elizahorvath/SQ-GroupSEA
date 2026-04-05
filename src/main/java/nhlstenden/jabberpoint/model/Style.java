@@ -38,7 +38,7 @@ public class Style
 
 
     // Map to store styles per level
-    private final Map<Integer, Style> levelStyles = new HashMap<>();
+    private static final Map<Integer, Style> levelStyles = new HashMap<>();
 
     // Instance variables
     private final Font font;
@@ -60,6 +60,16 @@ public class Style
         return instance;
     }
 
+    static
+    {
+        // Initialize the various levels
+        levelStyles.put(0, new Style(INDENT_0, Color.red, FONT_SIZE_0, LEADING_TITLE));
+        levelStyles.put(1, new Style(INDENT_1, Color.blue, FONT_SIZE_1, LEADING_DEFAULT));
+        levelStyles.put(2, new Style(INDENT_2, Color.black, FONT_SIZE_2, LEADING_DEFAULT));
+        levelStyles.put(3, new Style(INDENT_3, Color.black, FONT_SIZE_3, LEADING_DEFAULT));
+        levelStyles.put(4, new Style(INDENT_4, Color.black, FONT_SIZE_4, LEADING_DEFAULT));
+    }
+
     /* Private constructor for the Singleton Registry.
      * Initializes all the standard styles (removes Magic Numbers).*/
     private Style()
@@ -70,13 +80,6 @@ public class Style
         this.fontSize = 0;
         this.leading = 0;
         this.font = null;
-
-        // Initialize the various levels
-        levelStyles.put(0, new Style(INDENT_0, Color.red, FONT_SIZE_0, LEADING_TITLE));
-        levelStyles.put(1, new Style(INDENT_1, Color.blue, FONT_SIZE_1, LEADING_DEFAULT));
-        levelStyles.put(2, new Style(INDENT_2, Color.black, FONT_SIZE_2, LEADING_DEFAULT));
-        levelStyles.put(3, new Style(INDENT_3, Color.black, FONT_SIZE_3, LEADING_DEFAULT));
-        levelStyles.put(4, new Style(INDENT_4, Color.black, FONT_SIZE_4, LEADING_DEFAULT));
     }
 
     /* Private constructor for creating individual level instances. */
