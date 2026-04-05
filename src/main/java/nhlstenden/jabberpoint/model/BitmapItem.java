@@ -18,7 +18,8 @@ import java.io.File;
  * @version 1.6 2014/05/16 Sylvia Stuurman
 */
 
-public class BitmapItem extends SlideItem {
+public class BitmapItem extends SlideItem 
+{
   private Image bufferedImage;
   private String imageName;
   
@@ -26,33 +27,37 @@ public class BitmapItem extends SlideItem {
   protected static final String NOTFOUND = " not found";
 
 // level is equal to item-level; name is the name of the file with the Image
-	public BitmapItem(int level, String name) {
+	public BitmapItem(int level, String name) 
+	{
 		super(level);
 		imageName = name;
-		// Check if file exists manually since Toolkit doesn't throw IOException
-		if (name != null) {
+		if (name != null) 
+			{
         File file = new File(name);
-        if (!file.exists()) {
+        if (!file.exists()) 
+			{
             System.err.println(FILE + imageName + NOTFOUND);
         }
-		
-		// Toolkit loads the image in the background (enabling GIFs)
-		}
+        // Only load if name is not null
         this.bufferedImage = Toolkit.getDefaultToolkit().getImage(name);
     }
+}
 	
 	// An empty bitmap-item
-	public BitmapItem() {
+	public BitmapItem() 
+	{
 		this(0, null);
 	}
 
 	// Returns the filename of the image
-	public String getName() {
+	public String getName() 
+	{
 		return imageName;
 	}
 
 	// Returns the bounding box of the image
-	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) 
+	{
 		// Changed myStyle.indent to myStyle.getIndent()
         // Changed myStyle.leading to myStyle.getLeading()
 		return new Rectangle((int) (myStyle.getIndent() * scale), 0,
@@ -62,7 +67,8 @@ public class BitmapItem extends SlideItem {
 	}
 
 	// Draws the image
-	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer) {
+	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer) 
+	{
 		// Changed myStyle.indent to myStyle.getIndent()
         // Changed myStyle.leading to myStyle.getLeading()
         int width = x + (int) (myStyle.getIndent() * scale);
@@ -71,7 +77,8 @@ public class BitmapItem extends SlideItem {
                 (int) (bufferedImage.getHeight(observer)*scale), observer);
     }
 
-	public String toString() {
+	public String toString()
+	{
 		return "BitmapItem[" + getLevel() + "," + imageName + "]";
 	}
 }

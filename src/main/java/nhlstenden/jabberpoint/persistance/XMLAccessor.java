@@ -1,4 +1,4 @@
-package nhlstenden.jabberpoint.persistance; // Keep the new package structure
+package nhlstenden.jabberpoint.persistance;
 
 import java.util.Vector;
 import java.io.File;
@@ -36,14 +36,16 @@ public class XMLAccessor extends Accessor {
     protected static final String KIND = "kind";
     protected static final String TEXT = "text";
     protected static final String IMAGE = "image";
-    
-    /** Message text constants */
+
+    /**
+     * Message text constants
+     */
     protected static final String PCE = "Parser Configuration Exception";
     protected static final String UNKNOWNTYPE = "Unknown Element type";
     protected static final String NFE = "Number Format Exception";
 
-    public XMLAccessor() {
-        this.factory = new XMLSlideItemFactory(); // Initialize your Factory
+public XMLAccessor() {
+        this.factory = new XMLSlideItemFactory(); 
     }
     
     private String getTitle(Element element, String tagName) {
@@ -61,57 +63,63 @@ public class XMLAccessor extends Accessor {
 
             NodeList slides = doc.getElementsByTagName(SLIDE);
             max = slides.getLength();
-            for (slideNumber = 0; slideNumber < max; slideNumber++) {
+            for (slideNumber = 0; slideNumber < max; slideNumber++)
+            {
                 Element xmlSlide = (Element) slides.item(slideNumber);
                 Slide slide = new Slide();
                 slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
                 presentation.append(slide);
-                
+
                 NodeList slideItems = xmlSlide.getElementsByTagName(ITEM);
                 maxItems = slideItems.getLength();
-                for (itemNumber = 0; itemNumber < maxItems; itemNumber++) {
+                for (itemNumber = 0; itemNumber < maxItems; itemNumber++)
+                {
                     Element item = (Element) slideItems.item(itemNumber);
                     loadSlideItem(slide, item);
                 }
             }
-        } 
-        catch (IOException iox) {
-            throw iox; // Keep the smart change: re-throw the exception
-        }
-        catch (SAXException sax) {
+        } catch (IOException iox)
+        {
+            throw iox;
+        } catch (SAXException sax)
+        {
             System.err.println(sax.getMessage());
-        }
-        catch (ParserConfigurationException pcx) {
+        } catch (ParserConfigurationException pcx)
+        {
             System.err.println(PCE);
-        }   
+        }
     }
 
     protected void loadSlideItem(Slide slide, Element item) {
-        int level = 1;
+        int level = 1; // default
         NamedNodeMap attributes = item.getAttributes();
-        String leveltext = attributes.getNamedItem(LEVEL).getTextContent();
-        if (leveltext != null) {
+        
+        // Safely extract the level
+        var levelNode = attributes.getNamedItem(LEVEL);
+        if (levelNode != null) {
             try {
-                level = Integer.parseInt(leveltext);
-            }
-            catch(NumberFormatException x) {
+                level = Integer.parseInt(levelNode.getTextContent());
+            } catch (NumberFormatException x) {
                 System.err.println(NFE);
             }
         }
-        
+
+        // Get the type (text/image) and the content
         String type = attributes.getNamedItem(KIND).getTextContent();
         String content = item.getTextContent();
 
-        // Use your Abstract Factory logic here [cite: 29, 30]
+        // FIX: Use the Factory instead of if-else blocks
         try {
             SlideItem slideItem = factory.createSlideItem(type, level, content);
             slide.append(slideItem);
         } catch (IllegalArgumentException e) {
-            System.err.println(UNKNOWNTYPE);
+            // This catches "Unknown Element type" thrown by your Factory's default switch case
+            System.err.println(UNKNOWNTYPE + ": " + type);
         }
     }
 
-    public void saveFile(Presentation presentation, String filename) throws IOException {
+    public void saveFile(Presentation presentation, String filename) throws IOException
+    {
         PrintWriter out = new PrintWriter(new FileWriter(filename));
         out.println("<?xml version=\"1.0\"?>");
         out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
@@ -119,21 +127,31 @@ public class XMLAccessor extends Accessor {
         out.print("<showtitle>");
         out.print(presentation.getTitle());
         out.println("</showtitle>");
-        for (int slideNumber=0; slideNumber<presentation.getSize(); slideNumber++) {
+
+        for (int slideNumber = 0; slideNumber < presentation.getSize(); slideNumber++)
+        {
             Slide slide = presentation.getSlide(slideNumber);
             out.println("<slide>");
             out.println("<title>" + slide.getTitle() + "</title>");
             Vector<SlideItem> slideItems = slide.getSlideItems();
-            for (int itemNumber = 0; itemNumber<slideItems.size(); itemNumber++) {
+            for (int itemNumber = 0; itemNumber < slideItems.size(); itemNumber++)
+            {
                 SlideItem slideItem = (SlideItem) slideItems.elementAt(itemNumber);
-                out.print("<item kind="); 
-                if (slideItem instanceof TextItem) {
+                out.print("<item kind=");
+                if (slideItem instanceof TextItem)
+                {
                     out.print("\"text\" level=\"" + slideItem.getLevel() + "\">");
                     out.print(((TextItem) slideItem).getText());
-                }
-                else if (slideItem instanceof BitmapItem) {
-                    out.print("\"image\" level=\"" + slideItem.getLevel() + "\">");
-                    out.print(((BitmapItem) slideItem).getName());
+                } else
+                {
+                    if (slideItem instanceof BitmapItem)
+                    {
+                        out.print("\"image\" level=\"" + slideItem.getLevel() + "\">");
+                        out.print(((BitmapItem) slideItem).getName());
+                    } else
+                    {
+                        System.out.println("Ignoring " + slideItem);
+                    }
                 }
                 out.println("</item>");
             }
