@@ -11,6 +11,7 @@ import java.awt.MenuItem;
 import java.awt.MenuShortcut;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -113,13 +114,13 @@ public class MenuController extends MenuBar
 
         Menu viewMenu = new Menu(VIEW);
 
-        viewMenu.add(menuItem = mkMenuItem(NEXT));
+        viewMenu.add(menuItem = new MenuItem(NEXT, new MenuShortcut(KeyEvent.VK_F)));
         menuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent actionEvent) { presentation.nextSlide(); }
         });
 
-        viewMenu.add(menuItem = mkMenuItem(PREV));
+        viewMenu.add(menuItem = new MenuItem(PREV, new MenuShortcut(KeyEvent.VK_P)));
         menuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent actionEvent) { presentation.prevSlide(); }
