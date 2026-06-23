@@ -1,7 +1,6 @@
 package nhlstenden.jabberpoint.controller;
 
 import nhlstenden.jabberpoint.persistance.Accessor;
-import nhlstenden.jabberpoint.persistance.XMLAccessor;
 import nhlstenden.jabberpoint.model.Presentation;
 import nhlstenden.jabberpoint.view.AboutBox;
 
@@ -24,53 +23,50 @@ import javax.swing.JOptionPane;
  */
 public class MenuController extends MenuBar
 {
-
-    private Frame parent;               // the frame, only used as parent for the Dialogs
-    private Presentation presentation;  // Commands are given to the presentation
+    private Frame parent;
+    private Presentation presentation;
+    private Accessor accessor; // injected — not hardcoded to XML
 
     private static final long serialVersionUID = 227L;
 
-    protected static final String ABOUT = "About";
-    protected static final String FILE = "File";
-    protected static final String EXIT = "Exit";
-    protected static final String GOTO = "Go to";
-    protected static final String HELP = "Help";
-    protected static final String NEW = "New";
-    protected static final String NEXT = "Next";
-    protected static final String OPEN = "Open";
+    protected static final String ABOUT  = "About";
+    protected static final String FILE   = "File";
+    protected static final String EXIT   = "Exit";
+    protected static final String GOTO   = "Go to";
+    protected static final String HELP   = "Help";
+    protected static final String NEW    = "New";
+    protected static final String NEXT   = "Next";
+    protected static final String OPEN   = "Open";
     protected static final String PAGENR = "Page number?";
-    protected static final String PREV = "Prev";
-    protected static final String SAVE = "Save";
-    protected static final String VIEW = "View";
+    protected static final String PREV   = "Prev";
+    protected static final String SAVE   = "Save";
+    protected static final String VIEW   = "View";
 
     protected static final String TESTFILE = "test.xml";
     protected static final String SAVEFILE = "dump.xml";
 
-    protected static final String IOEX = "IO Exception: ";
+    protected static final String IOEX    = "IO Exception: ";
     protected static final String LOADERR = "Load Error";
     protected static final String SAVEERR = "Save Error";
 
-    protected Accessor createAccessor() {
-        return new XMLAccessor();
-    }
-
-    public MenuController(Frame frame, Presentation pres)
+    public MenuController(Frame frame, Presentation pres, Accessor accessor)
     {
         parent = frame;
         presentation = pres;
+        this.accessor = accessor;
+
         MenuItem menuItem;
         Menu fileMenu = new Menu(FILE);
-        fileMenu.add(menuItem = mkMenuItem(OPEN));
 
+        fileMenu.add(menuItem = mkMenuItem(OPEN));
         menuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent actionEvent)
             {
                 presentation.clear();
-                Accessor xmlAccessor = createAccessor();
                 try
                 {
-                    xmlAccessor.loadFile(presentation, TESTFILE);
+                    accessor.loadFile(presentation, TESTFILE);
                     presentation.setSlideNumber(0);
                 } catch (IOException exc)
                 {
@@ -78,6 +74,7 @@ public class MenuController extends MenuBar
                 }
             }
         });
+
         fileMenu.add(menuItem = mkMenuItem(NEW));
         menuItem.addActionListener(new ActionListener()
         {
@@ -86,21 +83,22 @@ public class MenuController extends MenuBar
                 presentation.clear();
             }
         });
+
         fileMenu.add(menuItem = mkMenuItem(SAVE));
         menuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                Accessor xmlAccessor = createAccessor();
                 try
                 {
-                    xmlAccessor.saveFile(presentation, SAVEFILE);
+                    accessor.saveFile(presentation, SAVEFILE);
                 } catch (IOException exc)
                 {
                     JOptionPane.showMessageDialog(parent, IOEX + exc, SAVEERR, JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
         fileMenu.addSeparator();
         fileMenu.add(menuItem = mkMenuItem(EXIT));
         menuItem.addActionListener(new ActionListener()
@@ -110,31 +108,24 @@ public class MenuController extends MenuBar
                 System.exit(0);
             }
         });
+
         add(fileMenu);
+
         Menu viewMenu = new Menu(VIEW);
 
         viewMenu.add(menuItem = mkMenuItem(NEXT));
-
         menuItem.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent actionEvent)
-            {
-                presentation.nextSlide();
-            }
+            public void actionPerformed(ActionEvent actionEvent) { presentation.nextSlide(); }
         });
 
         viewMenu.add(menuItem = mkMenuItem(PREV));
-
         menuItem.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent actionEvent)
-            {
-                presentation.prevSlide();
-            }
+            public void actionPerformed(ActionEvent actionEvent) { presentation.prevSlide(); }
         });
 
         viewMenu.add(menuItem = mkMenuItem(GOTO));
-
         menuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent actionEvent)
@@ -146,21 +137,16 @@ public class MenuController extends MenuBar
         });
 
         add(viewMenu);
+
         Menu helpMenu = new Menu(HELP);
         helpMenu.add(menuItem = mkMenuItem(ABOUT));
-
         menuItem.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent actionEvent)
-            {
-                AboutBox.show(parent);
-            }
+            public void actionPerformed(ActionEvent actionEvent) { AboutBox.show(parent); }
         });
-
-        setHelpMenu(helpMenu); // needed for portability (Motif, etc.).
+        setHelpMenu(helpMenu);
     }
 
-    // create a menu item
     public MenuItem mkMenuItem(String name)
     {
         return new MenuItem(name, new MenuShortcut(name.charAt(0)));

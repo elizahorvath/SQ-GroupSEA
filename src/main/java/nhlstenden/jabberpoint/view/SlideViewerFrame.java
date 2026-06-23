@@ -3,6 +3,7 @@ import nhlstenden.jabberpoint.controller.KeyController;
 import nhlstenden.jabberpoint.controller.MenuController;
 import nhlstenden.jabberpoint.util.Resources;
 import nhlstenden.jabberpoint.model.Presentation;
+import nhlstenden.jabberpoint.persistance.XMLAccessor;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -47,7 +48,7 @@ public class SlideViewerFrame extends JFrame
 			});
 		getContentPane().add(slideViewerComponent);
 		addKeyListener(new KeyController(presentation));            // add key controller
-		setMenuBar(new MenuController(this, presentation));	// add menu controller
+		setMenuBar(new MenuController(this, presentation, new XMLAccessor()));
 		setSize(new Dimension(WIDTH, HEIGHT));                      // Same dimensions as Slide
 		setVisible(true);
 	}
