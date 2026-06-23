@@ -10,4 +10,6 @@ public class Resources
     // Version Info
     public static final String JABVERSION = "Jabberpoint 1.6 - English Version";
     public static final String JABTITLE = "Jabberpoint - OU";
+
+    //testing message
 }
