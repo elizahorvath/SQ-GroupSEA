@@ -38,7 +38,7 @@ class PresentationTest
     }
 
     @Test
-    void observerIsNotifiedAfterRemoval()
+    void observerIsNotNotifiedAfterRemoval()
     {
         AtomicBoolean wasCalled = new AtomicBoolean(false);
 

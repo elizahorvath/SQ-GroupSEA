@@ -16,65 +16,46 @@ import java.util.Map;
 
 public class Style
 {
-    private static Style instance; // the single instance of Style (Singleton)
+    // Eager initialization — guaranteed ONE instance, no lazy-init issues
+    private static final Style INSTANCE = new Style();
 
-    // Indents per level
+    private static final Map<Integer, Style> levelStyles = new HashMap<>();
+
     private static final int INDENT_0 = 0;
     private static final int INDENT_1 = 20;
     private static final int INDENT_2 = 50;
     private static final int INDENT_3 = 70;
     private static final int INDENT_4 = 90;
 
-    // Font sizes per level
     private static final int FONT_SIZE_0 = 48;
     private static final int FONT_SIZE_1 = 40;
     private static final int FONT_SIZE_2 = 36;
     private static final int FONT_SIZE_3 = 30;
     private static final int FONT_SIZE_4 = 24;
 
-    // Leading / Spacing constants
     private static final int LEADING_TITLE = 20;
     private static final int LEADING_DEFAULT = 10;
 
+    private static final String FONT_NAME = "Helvetica";
 
-    // Map to store styles per level
-    private static final Map<Integer, Style> levelStyles = new HashMap<>();
-
-    // Instance variables
     private final Font font;
     private final Color color;
     private final int indent;
     private final int fontSize;
     private final int leading;
 
-    private static final String FONT_NAME = "Helvetica";
-
-    /* Singleton Access Point */
-    public static Style getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new Style();
-        }
-
-        return instance;
-    }
-
     static
     {
-        // Initialize the various levels
-        levelStyles.put(0, new Style(INDENT_0, Color.red, FONT_SIZE_0, LEADING_TITLE));
-        levelStyles.put(1, new Style(INDENT_1, Color.blue, FONT_SIZE_1, LEADING_DEFAULT));
+        levelStyles.put(0, new Style(INDENT_0, Color.red,   FONT_SIZE_0, LEADING_TITLE));
+        levelStyles.put(1, new Style(INDENT_1, Color.blue,  FONT_SIZE_1, LEADING_DEFAULT));
         levelStyles.put(2, new Style(INDENT_2, Color.black, FONT_SIZE_2, LEADING_DEFAULT));
         levelStyles.put(3, new Style(INDENT_3, Color.black, FONT_SIZE_3, LEADING_DEFAULT));
         levelStyles.put(4, new Style(INDENT_4, Color.black, FONT_SIZE_4, LEADING_DEFAULT));
     }
 
-    /* Private constructor for the Singleton Registry.
-     * Initializes all the standard styles (removes Magic Numbers).*/
+    // Private constructor for the singleton registry
     private Style()
     {
-        // Default values for the registry "container"
         this.indent = 0;
         this.color = Color.black;
         this.fontSize = 0;
@@ -82,7 +63,7 @@ public class Style
         this.font = null;
     }
 
-    /* Private constructor for creating individual level instances. */
+    // Private constructor for level style entries
     private Style(int indent, Color color, int points, int leading)
     {
         this.indent = indent;
@@ -92,31 +73,22 @@ public class Style
         this.leading = leading;
     }
 
+    // the one access point — always returns the same instance
+    public static Style getInstance()
+    {
+        return INSTANCE;
+    }
+
     public Style getStyle(int level)
     {
-        if (level >= levelStyles.size())
-        {
-            level = levelStyles.size() - 1;
-        }
-
+        if (level < 0) level = 0;
+        if (level >= levelStyles.size()) level = levelStyles.size() - 1;
         return levelStyles.get(level);
     }
 
-    // Getters
-    public Color getColor()
-    {
-        return color;
-    }
-
-    public int getIndent()
-    {
-        return indent;
-    }
-
-    public int getLeading()
-    {
-        return leading;
-    }
+    public Color getColor()  { return color; }
+    public int getIndent()   { return indent; }
+    public int getLeading()  { return leading; }
 
     public Font getFont(float scale)
     {

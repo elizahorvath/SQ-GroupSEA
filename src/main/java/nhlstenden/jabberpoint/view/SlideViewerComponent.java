@@ -24,72 +24,67 @@ import javax.swing.JFrame;
 
 public class SlideViewerComponent extends JComponent implements PresentationObserver
 {
-		
-	private Slide slide; // current slide
-	private Font labelFont = null; // font for labels
-	private Presentation presentation = null; // the presentation
-	private JFrame frame = null;
-	
-	private static final long serialVersionUID = 227L;
-	
-	private static final Color BGCOLOR = Color.white;
-	private static final Color COLOR = Color.black;
-	private static final String FONTNAME = "Dialog";
-	private static final int FONTSTYLE = Font.BOLD;
-	private static final int FONTHEIGHT = 10;
-	private static final int XPOS = 1100;
-	private static final int YPOS = 20;
+    private Slide slide;
+    private Font labelFont = null;
+    private JFrame frame = null;
 
-    /**
-     * Constructor registers this component as an observer of the Presentation.
-     */
+    // Only store what we actually need for rendering
+    private int slideNumber = -1;
+    private int totalSlides = 0;
+    private String presentationTitle = "";
 
-	public SlideViewerComponent(Presentation pres, JFrame frame) {
-		setBackground(BGCOLOR); 
-		this.presentation = pres;
-		this.labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
-		this.frame = frame;
+    private static final long serialVersionUID = 227L;
 
+    private static final Color BGCOLOR = Color.white;
+    private static final Color COLOR = Color.black;
+    private static final String FONTNAME = "Dialog";
+    private static final int FONTSTYLE = Font.BOLD;
+    private static final int FONTHEIGHT = 10;
+    private static final int XPOS = 1100;
+    private static final int YPOS = 20;
+
+    public SlideViewerComponent(Presentation pres, JFrame frame)
+    {
+        setBackground(BGCOLOR);
+        this.labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
+        this.frame = frame;
         pres.addObserver(this);
-	}
+    }
 
     @Override
-	public Dimension getPreferredSize() {
-		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
-	}
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(Slide.WIDTH, Slide.HEIGHT);
+    }
 
-    /**
-     * Observer update method.
-     * Called automatically when Presentation changes slide.
-     */
     @Override
-	public void update(Presentation presentation) {
-		this.presentation = presentation;
-		this.slide = presentation.getCurrentSlide();
+    public void update(Presentation presentation)
+    {
+        this.slide = presentation.getCurrentSlide();
+        this.slideNumber = presentation.getSlideNumber();
+        this.totalSlides = presentation.getSize();
+        this.presentationTitle = presentation.getTitle();
 
-		repaint(); //Redraw the slide
-		frame.setTitle(presentation.getTitle());
-	}
+        repaint();
+        frame.setTitle(presentationTitle);
+    }
 
-	/**
-     * Draw the slide and the page indicator
-     * */
     @Override
-	public void paintComponent(Graphics g) {
-		g.setColor(BGCOLOR);
-		g.fillRect(0, 0, getSize().width, getSize().height);
+    public void paintComponent(Graphics g)
+    {
+        g.setColor(BGCOLOR);
+        g.fillRect(0, 0, getSize().width, getSize().height);
 
-		if (presentation.getSlideNumber() < 0 || slide == null)
+        if (slideNumber < 0 || slide == null)
         {
-			return;
-		}
+            return;
+        }
 
-		g.setFont(labelFont);
-		g.setColor(COLOR);
-		g.drawString("Slide " + (1 + presentation.getSlideNumber()) + " of " +
-                 presentation.getSize(), XPOS, YPOS);
+        g.setFont(labelFont);
+        g.setColor(COLOR);
+        g.drawString("Slide " + (1 + slideNumber) + " of " + totalSlides, XPOS, YPOS);
 
-		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
-		slide.draw(g, area, this);
-	}
+        Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
+        slide.draw(g, area, this);
+    }
 }

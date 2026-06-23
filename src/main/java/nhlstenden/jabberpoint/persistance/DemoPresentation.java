@@ -11,9 +11,10 @@ import nhlstenden.jabberpoint.model.Slide;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-class DemoPresentation extends Accessor
+// Only implements PresentationLoader — saveFile doesn't apply to a demo
+class DemoPresentation implements PresentationLoader
 {
-
+    @Override
     public void loadFile(Presentation presentation, String unusedFilename)
     {
         presentation.setTitle("Demo Presentation");
@@ -51,10 +52,5 @@ class DemoPresentation extends Accessor
         slide.append(1, "This is the end of the presentation.");
         slide.append(new BitmapItem(1, "JabberPoint.gif"));
         presentation.append(slide);
-    }
-
-    public void saveFile(Presentation presentation, String unusedFilename)
-    {
-        throw new IllegalStateException("Save As->Demo! called");
     }
 }
